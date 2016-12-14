@@ -11,7 +11,8 @@
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
         android:gravity="center"
-        android:weightSum="1">
+        android:weightSum="1"
+        android:background="@color/colorDarkerBackground">
 
         <Space
             android:layout_width="match_parent"
@@ -25,7 +26,8 @@
             android:id="@+id/tvTitle"
             android:textAlignment="center"
             android:textSize="24sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:textColor="@color/colorAccent" />
 
         <Space
             android:layout_width="match_parent"
@@ -38,7 +40,8 @@
             android:layout_height="wrap_content"
             android:id="@+id/tvSubtitle"
             android:textAlignment="center"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            android:textColor="@color/colorAccent" />
 
         <Space
             android:layout_width="match_parent"
@@ -50,6 +53,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/tvCredit"
-            android:textAlignment="center" />
+            android:textAlignment="center"
+            android:textColor="@color/colorAccent" />
     </LinearLayout>
 </RelativeLayout>

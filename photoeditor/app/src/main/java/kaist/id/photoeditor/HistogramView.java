@@ -8,45 +8,41 @@ import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
-import android.view.ScaleGestureDetector;
 import android.view.View;
 
 /**
  * Created by Sangyeob on 11/29/2016.
  */
 
-class PhotoView extends View {
+class HistogramView extends View {
 
     private int viewWidth;
     private int viewHeight;
 
-    private ExtendedImage image;
+    private Bitmap image;
+    private Bitmap scaledImage;
 
-    private ScaleGestureDetector gd;
-
-    public PhotoView (Context context) {
+    public HistogramView (Context context) {
         super(context);
         setWillNotDraw(false);
         image = null;
     }
 
-    public PhotoView (Context context, AttributeSet attrs) {
+    public HistogramView (Context context, AttributeSet attrs) {
         super(context, attrs);
-        setWillNotDraw(false);
         image = null;
     }
 
-    public PhotoView (Context context, AttributeSet attrs, int defStyle) {
+    public HistogramView (Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        setWillNotDraw(false);
         image = null;
     }
 
-    public void setImage(ExtendedImage image) {
-            this.image = image;
-            this.image.setResizedSize(viewWidth, viewHeight);
-        }
-    public ExtendedImage getImage() { return this.image; }
+    public void setImage(Bitmap image) {
+        Log.d("HistogramView", "Image Set");
+        this.image = image;
+        scaledImage = Bitmap.createScaledBitmap(image, viewWidth, viewHeight, true);
+    }
 
     @Override
     protected void onFinishInflate() {
@@ -55,10 +51,10 @@ class PhotoView extends View {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        viewHeight = MeasureSpec.getSize(heightMeasureSpec);
-        viewWidth = viewHeight * 4 / 3;
+        viewWidth = MeasureSpec.getSize(widthMeasureSpec);
+        viewHeight = viewWidth * 100 / 255;
         super.onMeasure(MeasureSpec.makeMeasureSpec(viewWidth, MeasureSpec.EXACTLY),
-                MeasureSpec.makeMeasureSpec(heightMeasureSpec, MeasureSpec.EXACTLY));
+                MeasureSpec.makeMeasureSpec(viewHeight, MeasureSpec.EXACTLY));
     }
 
     @Override
@@ -73,20 +69,18 @@ class PhotoView extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        Log.d("PhotoView", "onDrawCalled");
+        Log.d("HistogramView", "onDrawCalled");
         super.onDraw(canvas);
         Paint p = new Paint();
         p.setColor(getResources().getColor(R.color.colorDarkerBackground));
         p.setStyle(Paint.Style.FILL);
         canvas.drawPaint(p);
-        if(image != null) {
-            Log.d("PhotoView", "resizingImage");
-            Bitmap bitmap = image.makeResizedBitmapOnce(viewWidth, viewHeight);
-            if(bitmap.getHeight() * 4 / 3 < bitmap.getWidth()) {
-                canvas.drawBitmap(bitmap, 0, (viewHeight - viewWidth * image.getBitmap().getHeight() / image.getBitmap().getWidth()) / 2, null);
-            } else {
-                canvas.drawBitmap(bitmap, (viewWidth - viewHeight * image.getBitmap().getWidth() / image.getBitmap().getHeight()) / 2, 0, null);
-            }
+        if(scaledImage != null) {
+            Paint aa = new Paint();
+            aa.setAntiAlias(true);
+            aa.setFilterBitmap(true);
+            aa.setDither(true);
+            canvas.drawBitmap(scaledImage, 1, 1, aa);
         }
     }
 
